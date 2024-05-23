@@ -8,28 +8,33 @@ import (
 )
 
 type Config struct {
-	listen       string
-	dbConnString string
+	host     string
+	port     int
+	logLevel string
 }
 
-func (c *Config) DbConnString() string {
-	return c.dbConnString
+func (c *Config) Host() string {
+	return c.host
 }
 
-func (c *Config) Listen() string {
-	return c.listen
+func (c *Config) Port() int {
+	return c.port
+}
+
+func (c *Config) LogLevel() string {
+	return c.logLevel
 }
 
 func Load() (*Config, error) {
-	fs := flag.NewFlagSet("cute-chat-backend", flag.ExitOnError)
+	fs := flag.NewFlagSet("golang-junior-dev", flag.ExitOnError)
 	cfg := new(Config)
-	fs.StringVar(&cfg.listen, "listen", "localhost:46473", "listen listen")
-	//refresh    = fs.Duration("refresh", 15*time.Second, "refresh interval")
-	//debug      = fs.Bool("debug", false, "log debug information")
+	fs.StringVar(&cfg.host, "listen", "localhost", "listen host")
+	fs.IntVar(&cfg.port, "listen", 45385, "listen port")
+	fs.StringVar(&cfg.logLevel, "log level", "debug", "log level")
 	fs.String("config", "", "config file (optional)")
 
 	err := ff.Parse(fs, os.Args[1:],
-		ff.WithEnvVarPrefix("CCB_"),
+		ff.WithEnvVarPrefix("GJD_"),
 		ff.WithConfigFileFlag("config"),
 		ff.WithConfigFileParser(ff.PlainParser),
 	)
