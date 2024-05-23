@@ -86,22 +86,24 @@ func calculate(banknotes []int, amount int) ([]CalculatingExchangeOption, error)
 	if len(banknotes) == 1 {
 		return result, nil
 	}
-	curOpt := make([]int, len(initial))
-	copy(curOpt, initial)
-	for _, b := range banknotes[1:] {
-		for {
-			if len(curOpt) == 1 {
-				break
-			}
-			curOpt = append([]int{b}, curOpt[:len(curOpt)-2]...)
-			var curSum int
-			for _, v := range curOpt {
-				curSum += v
-			}
-			if curSum == amount {
-				result = append(result, curOpt)
-			} else if curSum > amount {
-				break
+	for i := 1; i < len(banknotes); i++ {
+		for _, b := range banknotes[i:] {
+			curOpt := make([]int, len(initial))
+			copy(curOpt, initial)
+			for {
+				if len(curOpt) == 1 {
+					break
+				}
+				curOpt = append([]int{b}, curOpt[:len(curOpt)-2]...)
+				var curSum int
+				for _, v := range curOpt {
+					curSum += v
+				}
+				if curSum == amount {
+					result = append(result, curOpt)
+				} else if curSum > amount {
+					continue
+				}
 			}
 		}
 	}
