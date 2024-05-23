@@ -11,7 +11,7 @@ func TestCalculateExchangeOptions(t *testing.T) {
 	var tests = []struct {
 		banknotes    []int
 		amount       int
-		wantExchange []CalculatingExchangeOption
+		wantExchange []CalcExchangeOption
 		wantErr      error
 	}{
 		//{
@@ -24,7 +24,7 @@ func TestCalculateExchangeOptions(t *testing.T) {
 			banknotes: []int{5000, 2000, 1000, 500, 200, 100, 50},
 			amount:    400,
 			wantErr:   nil,
-			wantExchange: []CalculatingExchangeOption{
+			wantExchange: []CalcExchangeOption{
 				{50, 50, 50, 50, 50, 50, 50, 50},
 				{100, 50, 50, 50, 50, 50, 50},
 				{100, 100, 50, 50, 50, 50},
