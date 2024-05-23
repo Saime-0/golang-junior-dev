@@ -1,32 +1,50 @@
 package usecase
 
-import "testing"
+import (
+	"errors"
+	"reflect"
+	"strconv"
+	"testing"
+)
 
-func TestCalculateOptionForRemainingBanknotes(t *testing.T) {
+func TestCalculateExchangeOptions(t *testing.T) {
 	var tests = []struct {
-		name         string
-		remBanknotes []int
-		remAmount    int
-		want         []int
+		banknotes    []int
+		amount       int
+		wantExchange []CalculatingExchangeOption
+		wantErr      error
 	}{
-		// the table itself
-		{"9 should be Foo", 9, "Foo"},
-		{"3 should be Foo", 3, "Foo"},
-		{"1 is not Foo", 1, "1"},
-		{"0 should be Foo", 0, "Foo"},
-	}
-
-	calculateOptionForRemainingBanknotes()
-	result := Fooer(3)
-	if result != "Foo" {
-		t.Errorf("Result was incorrect, got: %s, want: %s.", result, "Foo")
+		{
+			banknotes:    []int{50},
+			amount:       401,
+			wantExchange: nil,
+			wantErr:      ErrNotEnoughNecessaryBanknotes,
+		},
+		{
+			banknotes: []int{5000, 2000, 1000, 500, 200, 100, 50},
+			amount:    400,
+			wantErr:   nil,
+			wantExchange: []CalculatingExchangeOption{
+				{50, 50, 50, 50, 50, 50, 50, 50},
+				{100, 50, 50, 50, 50, 50, 50},
+				{100, 100, 50, 50, 50, 50},
+				{100, 100, 100, 50, 50},
+				{100, 100, 100, 100},
+				{200, 50, 50, 50, 50},
+				{200, 100, 50, 50},
+				{200, 100, 100},
+				{200, 200},
+			},
+		},
 	}
 	// The execution loop
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			ans := calculateOptionForRemainingBanknotes(tt.input)
-			if ans != tt.want {
-				t.Errorf("got %s, want %s", ans, tt.want)
+	for i, tt := range tests {
+		t.Run(strconv.Itoa(i), func(t *testing.T) {
+			ans, err := calculate(tt.banknotes, tt.amount)
+			if !errors.Is(err, tt.wantErr) {
+				t.Errorf("Got error:\n %v\nWant error:\n %v", ans, tt.wantExchange)
+			} else if !reflect.DeepEqual(ans, tt.wantExchange) {
+				t.Errorf("Got:\n %v\nWant:\n %v", ans, tt.wantExchange)
 			}
 		})
 	}
