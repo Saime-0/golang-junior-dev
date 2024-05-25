@@ -15,6 +15,12 @@ func TestCountV2Exchange(t *testing.T) {
 		wantExchange [][]int
 		wantError    error
 	}{
+		// what to happen if you give negative values?
+		{
+			banknotes: []int{1, 2},
+			amount:    4200000,
+			wantError: ErrReachedComplexityLimit,
+		},
 		{
 			banknotes: nil,
 			amount:    1,
