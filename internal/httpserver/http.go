@@ -26,6 +26,8 @@ func (s *Server) start(ctx context.Context) {
 		if err != nil {
 			logrus.Printf("httpserver - Server - closed with error: %v", err)
 		}
+		s.done <- struct{}{}
+		close(s.done)
 	}()
 	err := s.server.ListenAndServe()
 	// ignore ErrServerClose handling, because in
@@ -51,10 +53,13 @@ func New(ctx context.Context, usecases Usecases, host string, port int) *Server 
 		notify: make(chan error),
 		done:   make(chan struct{}),
 	}
+	mws := middlewares{
+		s.consumeError,
+	}
 
-	mux.HandleFunc("POST /calculating-exchange", s.calculatingExchange())
+	mux.HandleFunc("POST /calculating-exchange", mws.Wrap(s.calculatingExchange()))
 
-	s.start(ctx)
+	go s.start(ctx)
 	return s
 }
 
