@@ -34,13 +34,13 @@ func Load() (*Config, error) {
 	cfg := new(Config)
 	fs.StringVar(&cfg.host, "host", "localhost", "listen host")
 	fs.IntVar(&cfg.port, "port", 45385, "listen port")
-	fs.StringVar(&cfg.logLevel, "log level", "debug", "log level")
+	fs.StringVar(&cfg.logLevel, "log-level", "debug", "log level (panic,fatal,error,warn,info,debug,trace)")
 	fs.String("config", "", "config file (optional)")
 
 	err := ff.Parse(fs, os.Args[1:],
 		ff.WithEnvVarPrefix("GJD_"),
 		ff.WithConfigFileFlag("config"),
-		ff.WithConfigFileParser(ff.PlainParser),
+		ff.WithConfigFileParser(ff.JSONParser),
 	)
 	if err != nil {
 		return nil, fmt.Errorf("new config: parse os.Args: %w", err)
