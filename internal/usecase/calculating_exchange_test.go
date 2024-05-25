@@ -67,10 +67,10 @@ func TestCountV2Exchange(t *testing.T) {
 		t.Run(strconv.Itoa(i), func(t *testing.T) {
 			got, err := calculateExchange(tt.banknotes, tt.amount)
 			if !errors.Is(err, tt.wantError) {
-				t.Logf("\nbanknotes: %#v\namount: %#v\ngot: %#v\nwantError: %#v\n", tt.banknotes, tt.amount, got, tt.wantError)
+				t.Errorf("\nbanknotes: %#v\namount: %#v\ngotError: %#v\nwantError: %#v\n", tt.banknotes, tt.amount, err, tt.wantError)
 			}
 			if !exchangesEquals(got, tt.wantExchange) {
-				t.Logf("\nbanknotes: %#v\namount: %#v\ngot: %#v\nwantExchange: %#v\n", tt.banknotes, tt.amount, got, tt.wantExchange)
+				t.Errorf("\nbanknotes: %#v\namount: %#v\ngot: %#v\nwantExchange: %#v\n", tt.banknotes, tt.amount, got, tt.wantExchange)
 			}
 		})
 	}
