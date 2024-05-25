@@ -28,8 +28,8 @@ func (c *Config) LogLevel() string {
 func Load() (*Config, error) {
 	fs := flag.NewFlagSet("golang-junior-dev", flag.ExitOnError)
 	cfg := new(Config)
-	fs.StringVar(&cfg.host, "listen", "localhost", "listen host")
-	fs.IntVar(&cfg.port, "listen", 45385, "listen port")
+	fs.StringVar(&cfg.host, "host", "localhost", "listen host")
+	fs.IntVar(&cfg.port, "port", 45385, "listen port")
 	fs.StringVar(&cfg.logLevel, "log level", "debug", "log level")
 	fs.String("config", "", "config file (optional)")
 

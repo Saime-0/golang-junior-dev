@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/sirupsen/logrus"
+	"gitlab.com/llcmediatel/recruiting/golang-junior-dev/internal/usecase"
 	"net/http"
 	"strconv"
 	"time"
@@ -13,6 +14,7 @@ type Server struct {
 	server *http.Server
 	notify chan error
 	done   chan struct{}
+	uc     Usecases
 }
 
 func (s *Server) start(ctx context.Context) {
@@ -32,7 +34,11 @@ func (s *Server) start(ctx context.Context) {
 	close(s.notify)
 }
 
-func New(ctx context.Context, host string, port int) *Server {
+type Usecases struct {
+	CalculatingExchange *usecase.CalculatingExchange
+}
+
+func New(ctx context.Context, usecases Usecases, host string, port int) *Server {
 	mux := http.NewServeMux()
 
 	s := &Server{
@@ -41,6 +47,7 @@ func New(ctx context.Context, host string, port int) *Server {
 			Handler:     mux,
 			ReadTimeout: 30 * time.Second,
 		},
+		uc:     usecases,
 		notify: make(chan error),
 		done:   make(chan struct{}),
 	}

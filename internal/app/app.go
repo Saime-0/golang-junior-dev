@@ -6,13 +6,23 @@ import (
 	"github.com/sirupsen/logrus"
 	"gitlab.com/llcmediatel/recruiting/golang-junior-dev/internal/config"
 	"gitlab.com/llcmediatel/recruiting/golang-junior-dev/internal/httpserver"
+	"gitlab.com/llcmediatel/recruiting/golang-junior-dev/internal/usecase"
 	"sync"
 )
 
 func Start(ctx context.Context, cfg *config.Config) error {
 	var wg sync.WaitGroup
 
-	httpServer := httpserver.New(ctx, cfg.Host(), cfg.Port())
+	calcExchangeUsecase := &usecase.CalculatingExchange{}
+
+	httpServer := httpserver.New(
+		ctx,
+		httpserver.Usecases{
+			CalculatingExchange: calcExchangeUsecase,
+		},
+		cfg.Host(),
+		cfg.Port(),
+	)
 	wg.Add(1)
 	go func() {
 		<-httpServer.Done()
