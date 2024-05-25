@@ -13,6 +13,10 @@ type Config struct {
 	logLevel string
 }
 
+func (c *Config) String() string {
+	return fmt.Sprintf("Config(host=%v, port=%v, logLevel=%v)", c.host, c.port, c.logLevel)
+}
+
 func (c *Config) Host() string {
 	return c.host
 }

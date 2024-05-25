@@ -17,7 +17,7 @@ func main() {
 	if err != nil {
 		logrus.Fatal(err)
 	}
-	logrus.Info("config loaded")
+	logrus.Infof("config loaded: %v", cfg)
 	level, err := logrus.ParseLevel(cfg.LogLevel())
 	if err != nil {
 		logrus.Fatalf("main - parse log level: %v", err)
